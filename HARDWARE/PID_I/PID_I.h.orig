@@ -1,0 +1,20 @@
+#ifndef __PID_I_H
+#define __PID_I_H 			   
+#include "sys.h"  
+
+
+
+
+void PID_INIT(void);
+float PID_realize(float);
+#endif
+
+
+
+
+
+
+
+
+
+

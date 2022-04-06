@@ -1,0 +1,55 @@
+#include "PID_I.h"
+//增量式pid
+struct VAL_PID
+{
+    float SET_VAL; //设置值
+    float NOW_VAL; //当前值
+    float ERROR_VAL; //偏差值ET
+    float ERROR_NEXT; //上一次的偏差量E(T-1)
+    float ERROR_LAST; //再上一次的偏差量E*(T-2)
+    float Kp,Ki,Kd; //比例，积分，微分值
+	float incermentVAL;//，用pid公式算出来的值
+//	float vol; //控制执行器的变量
+    //float integral; //积分值
+} PID;
+
+void PID_INIT()
+{
+    PID.SET_VAL = 0;
+    PID.NOW_VAL = 0;
+    PID.ERROR_VAL = 0;
+    PID.ERROR_NEXT = 0;
+    PID.ERROR_LAST = 0;
+	PID.incermentVAL = 0;
+    PID.Kp = 50.0;
+    PID.Ki = 0.2;//未用到
+    PID.Kd = 0.2;//未用到
+}
+
+float PID_realize(float VAL)
+{
+		if(VAL > 180)
+		{
+			VAL = VAL - 360;
+		}
+	PID.incermentVAL = 400;
+	PID.ERROR_VAL= VAL;
+    PID.NOW_VAL = PID.Kp * PID.ERROR_VAL;//线形？？？？？？
+    PID.incermentVAL += PID.NOW_VAL;
+    return PID.NOW_VAL;
+}
+/*
+float PID_realize(float VAL)
+{
+    PID.SET_VAL = VAL;//赋值
+    PID.ERROR_VAL = PID.SET_VAL - PID.NOW_VAL;
+    PID.incermentVAL = (PID.Kp * (PID.ERROR_VAL - PID.ERROR_NEXT)) +
+				       (PID.Ki * PID.ERROR_VAL) +
+                       (PID.Kd * (PID.ERROR_VAL - 2 * PID.ERROR_NEXT + PID.ERROR_LAST));
+    PID.NOW_VAL += PID.incermentVAL;
+    PID.ERROR_LAST = PID.ERROR_NEXT;
+    PID.ERROR_NEXT = PID.ERROR_VAL;
+    return PID.NOW_VAL;
+}
+*/
+
